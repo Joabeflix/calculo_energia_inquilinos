@@ -6,10 +6,10 @@ class TipoValKwr(TypedDict):
     adicional_vermelho: float
 
 class TipoConsumo(TypedDict):
-    total_consumido: int
-    consumido_verde: int
-    consumido_amarelo: int
-    consumido_vermelho: int
+    total_consumo: int
+    consumo_verde: int
+    consumo_amarelo: int
+    consumo_vermelho: int
 
 class TipoInquilino(TypedDict):
     nome: str

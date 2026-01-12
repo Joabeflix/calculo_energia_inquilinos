@@ -31,7 +31,7 @@ class ValoresKwh:
 
 
 
-    chaves_alteraveis = Literal['preco_base', 'adicional_amarelo', 'adicional_vermelho', 'tet']
+    chaves_alteraveis = Literal['preco_base', 'adicional_amarelo', 'adicional_vermelho']
     def definir_valores(self, tipo: chaves_alteraveis, valor:  float) -> None:
         with open("valoreskwr.json", "r", encoding="utf-8") as f:
             dados = json.load(f)
@@ -41,6 +41,42 @@ class ValoresKwh:
         self.dados_valores = self.carregar_dados()
 
 
+class Consumo:
+    def __init__(self) -> None:
+        self.dados_consumo: TipoConsumo = self.carregar_dados()
+
+    def carregar_dados(self):
+        with open('consumo.json') as file:
+            return json.load(file)
+
+    @property
+    def total_consumo(self) -> float:
+        return self.dados_consumo['total_consumo']
+    
+    @property
+    def consumo_verde(self) -> float:
+        return self.dados_consumo['consumo_verde']
+    @property
+    def consumo_amarelo(self) -> float:
+        return self.dados_consumo['consumo_amarelo']
+
+    @property
+    def consumo_vermelho(self) -> float:
+        return self.dados_consumo['consumo_vermelho']        
+
+    chaves_alteraveis = Literal['total_consumo',
+                                'consumo_verde',
+                                'consumo_amarelo',
+                                'consumo_vermelho']
+    def definir_valores(self, tipo: chaves_alteraveis, valor:  float) -> None:
+        with open("consumo.json", "r", encoding="utf-8") as f:
+            dados = json.load(f)
+        dados[tipo] = valor
+        with open("consumo.json", "w", encoding="utf-8") as f:
+            json.dump(dados, f, indent=4, ensure_ascii=False)
+        self.dados_consumo = self.carregar_dados()
+
+
 
 
 
@@ -48,26 +84,17 @@ class ValoresKwh:
 
 if __name__ == '__main__':
     print('Testando')
+    consumo_app = Consumo()
+    print(consumo_app.total_consumo)
+    print(consumo_app.consumo_verde)
+    print(consumo_app.consumo_amarelo)
+    print(consumo_app.consumo_vermelho)
 
-
-    valor = ValoresKwh()
-    print(valor.amarelo)
-    valor.definir_valores('adicional_amarelo', 0.02395161)
-    print(valor.amarelo)
-
-
-
-
-# x = ValoresKwh()
-# print(x.preco_base)
-# print(x.adicional_amarelo)
-# print(x.adiconal_vermelho)
-# print('-   - ' * 5)
-
-
-# print(x.verde)
-# print(x.amarelo)
-# print(x.vermelho)
-
-
-
+    consumo_app.definir_valores(tipo='total_consumo', valor = 100)
+    consumo_app.definir_valores(tipo='consumo_verde', valor = 45)
+    consumo_app.definir_valores(tipo='consumo_amarelo', valor = 98)
+    consumo_app.definir_valores(tipo='consumo_vermelho', valor=34)
+    print(consumo_app.total_consumo)
+    print(consumo_app.consumo_verde)
+    print(consumo_app.consumo_amarelo)
+    print(consumo_app.consumo_vermelho)
