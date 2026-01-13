@@ -2,5 +2,6 @@
     "total_consumo": 100,
     "consumo_verde": 45,
     "consumo_amarelo": 98,
-    "consumo_vermelho": 34
+    "consumo_vermelho": 34,
+    "ilumicacao_publica": 100
 }

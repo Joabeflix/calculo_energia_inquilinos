@@ -75,6 +75,7 @@ class Consumo:
         with open("consumo.json", "w", encoding="utf-8") as f:
             json.dump(dados, f, indent=4, ensure_ascii=False)
         self.dados_consumo = self.carregar_dados()
+
 class Inquilinos:
     def __init__(self) -> None:
         self.dados = self.carregar_dados()
@@ -90,6 +91,15 @@ class Inquilinos:
     @property
     def quantidade_inquilinos(self) -> int:
         return len(self.dados)
+    
+    def limpar_inquilinos(self) -> None:
+        dados = {}
+
+        with open("inquilinos.json", "w", encoding="utf-8") as f:
+            json.dump(dados, f, indent=4, ensure_ascii=False)
+
+        self.dados = self.carregar_dados()
+
 
     def cadastrar_atualizar_inquilino(self, inquilino):
         with open("inquilinos.json", "r", encoding="utf-8") as f:
@@ -107,8 +117,9 @@ class Inquilinos:
 
 if __name__ == '__main__':
     inq = Inquilinos()
-    print(inq.inquilinos_cadastrados)
-    print(inq.quantidade_inquilinos)
+    # inq.limpar_inquilinos()
+    # print(inq.inquilinos_cadastrados)
+    # print(inq.quantidade_inquilinos)
     x: TipoInquilino = {"nome": "suellen",
                         "consumo_anterior": 200,
                         "consumo_atual": 279} 
