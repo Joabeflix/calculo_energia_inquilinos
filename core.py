@@ -10,6 +10,7 @@ consumo_geral: TipoConsumo = {"total_consumo": 496,
                               "ilumicacao_publica": 43.93
                               }
 
+
 class CalcularEnergia():
     def __init__(self) -> None:
         self.porcentagem_amarela: None | float = None
