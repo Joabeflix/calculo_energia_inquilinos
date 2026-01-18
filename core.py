@@ -1,6 +1,6 @@
 from class_dados import Consumo, ValoresKwh, Inquilinos
 from tipos import TipoInquilino, TipoConsumo, TipoValKwr
-
+import json
 
 class CalcularEnergia():
     def __init__(self) -> None:
@@ -41,13 +41,23 @@ class CalcularEnergia():
 
             total = iluminacao_publica + valor_verde + valor_amarelo + valor_vermelho
 
-            valores[inq] = {"valor_verde": f"{valor_verde:.2f}",
+            valores[inq] = {"registro_kwh_anterior": dados["consumo_anterior"],
+                            "registro_kwh_atual": dados["consumo_atual"],
+                            "kwh_consumido_mes": f'{consumo:.2f}',
+                            "valor_kwh_verde": valoreskwh.verde,
+                            "valor_kwh_amarelo": valoreskwh.amarelo,
+                            "valor_kwh_vermelho": valoreskwh.vermelho,
+                            "consumo_kwh_verde": f'{consumo_verde:.2f}',
+                            "consumo_kwh_amarelo": f'{consumo_amarelo:.2f}',
+                            "consumo_kwh_vermelho": f'{consumo_vermelho:.2f}',
+                            "valor_verde": f"{valor_verde:.2f}",
                             "valor_amarelo": f"{valor_amarelo:.2f}",
                             "valor_vermelho": f"{valor_vermelho:.2f}",
                             "iluminacao_publica": f"{iluminacao_publica:.2f}",
                             "total": f"{total:.2f}"}
             
-        
+        with open("calculo_final.json", "w", encoding="utf-8") as f:
+            json.dump(valores, f, indent=4)
         return valores
     
     

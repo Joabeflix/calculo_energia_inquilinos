@@ -1,0 +1,50 @@
+{
+    "suellen": {
+        "registro_kwh_anterior": 231.8,
+        "registro_kwh_atual": 416.5,
+        "kwh_consumido_mes": "184.70",
+        "valor_kwh_verde": 1.00249999,
+        "valor_kwh_amarelo": 1.0264516,
+        "valor_kwh_vermelho": 1.05904904,
+        "consumo_kwh_verde": "39.18",
+        "consumo_kwh_amarelo": "145.52",
+        "consumo_kwh_vermelho": "0.00",
+        "valor_verde": "39.28",
+        "valor_amarelo": "149.37",
+        "valor_vermelho": "0.00",
+        "iluminacao_publica": "14.64",
+        "total": "203.29"
+    },
+    "milly": {
+        "registro_kwh_anterior": 248.3,
+        "registro_kwh_atual": 472.2,
+        "kwh_consumido_mes": "223.90",
+        "valor_kwh_verde": 1.00249999,
+        "valor_kwh_amarelo": 1.0264516,
+        "valor_kwh_vermelho": 1.05904904,
+        "consumo_kwh_verde": "47.49",
+        "consumo_kwh_amarelo": "176.41",
+        "consumo_kwh_vermelho": "0.00",
+        "valor_verde": "47.61",
+        "valor_amarelo": "181.07",
+        "valor_vermelho": "0.00",
+        "iluminacao_publica": "14.64",
+        "total": "243.33"
+    },
+    "wanderson": {
+        "registro_kwh_anterior": 103.2,
+        "registro_kwh_atual": 177.4,
+        "kwh_consumido_mes": "74.20",
+        "valor_kwh_verde": 1.00249999,
+        "valor_kwh_amarelo": 1.0264516,
+        "valor_kwh_vermelho": 1.05904904,
+        "consumo_kwh_verde": "15.74",
+        "consumo_kwh_amarelo": "58.46",
+        "consumo_kwh_vermelho": "0.00",
+        "valor_verde": "15.78",
+        "valor_amarelo": "60.01",
+        "valor_vermelho": "0.00",
+        "iluminacao_publica": "14.64",
+        "total": "90.43"
+    }
+}

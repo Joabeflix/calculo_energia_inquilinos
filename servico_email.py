@@ -50,7 +50,15 @@ def fazer_envio_email():
         remetente='joabealvesyt@gmail.com',
     )
     email.definir_senha(config['senha_email'])
+    corpo_email = (
+        "Olá,\n\n"
+        "Segue em anexo a fatura de energia referente ao período atual, "
+        "contendo o detalhamento de consumo, tarifas aplicadas e o valor total a pagar.\n\n"
+        "Por favor, verifique as informações e, em caso de qualquer dúvida ou divergência, "
+        "fico à disposição para esclarecimentos.\n\n"
+        "Atenciosamente,\n"
+        "Joabe Alves"
+    )
+    email.enviar(assunto=f'[EMAIL TESTE] - Fatura de Energia – Valor a Pagar', mensagem=corpo_email, destinatarios=['joabealvesyt@gmail.com', 'maksuellyalves46@gmail.com'], anexos=['faturas/fatura_suellen.pdf'])
 
-    email.enviar(assunto=f'Assunto', mensagem='Olá', destinatarios=['joabealvesyt@gmail.com'], anexos=[r'temp\teste.txt'])
-
-# fazer_envio_email()
+fazer_envio_email()
