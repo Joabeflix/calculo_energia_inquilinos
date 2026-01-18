@@ -1,13 +1,14 @@
 import json
 from tipos import *
 from typing import Literal
+import os
 
 class ValoresKwh:
     def __init__(self) -> None:
         self.dados_valores: TipoValKwr = self.carregar_dados()
 
     def carregar_dados(self):
-        with open('valoreskwr.json') as file:
+        with open(os.path.join('dados', 'valoreskwr.json')) as file:
             return json.load(file)
 
     @property
@@ -33,10 +34,10 @@ class ValoresKwh:
 
     chaves_alteraveis = Literal['preco_base', 'adicional_amarelo', 'adicional_vermelho']
     def definir_valores(self, tipo: chaves_alteraveis, valor:  float) -> None:
-        with open("valoreskwr.json", "r", encoding="utf-8") as f:
+        with open(os.path.join('dados', 'valoreskwr.json'), "r", encoding="utf-8") as f:
             dados = json.load(f)
         dados[tipo] = valor
-        with open("valoreskwr.json", "w", encoding="utf-8") as f:
+        with open(os.path.join('dados', 'valoreskwr.json'), "w", encoding="utf-8") as f:
             json.dump(dados, f, indent=4, ensure_ascii=False)
         self.dados_valores = self.carregar_dados()
 
@@ -46,7 +47,7 @@ class Consumo:
         self.dados_consumo: TipoConsumo = self.carregar_dados()
 
     def carregar_dados(self):
-        with open('consumo.json') as file:
+        with open(os.path.join('dados', 'consumo.json')) as file:
             return json.load(file)
 
     @property
@@ -72,10 +73,10 @@ class Consumo:
                                 'consumo_amarelo',
                                 'consumo_vermelho']
     def definir_valores(self, tipo: chaves_alteraveis, valor:  float) -> None:
-        with open("consumo.json", "r", encoding="utf-8") as f:
+        with open(os.path.join('dados', 'consumo.json'), "r", encoding="utf-8") as f:
             dados = json.load(f)
         dados[tipo] = valor
-        with open("consumo.json", "w", encoding="utf-8") as f:
+        with open(os.path.join('dados', 'consumo.json'), "w", encoding="utf-8") as f:
             json.dump(dados, f, indent=4, ensure_ascii=False)
         self.dados_consumo = self.carregar_dados()
 
@@ -84,7 +85,7 @@ class Inquilinos:
         self.dados = self.carregar_dados()
 
     def carregar_dados(self) -> dict:
-        with open('inquilinos.json', encoding="utf-8") as file:
+        with open(os.path.join('dados', 'inquilinos.json'), encoding="utf-8") as file:
             return json.load(file)
     
     @property
@@ -102,14 +103,14 @@ class Inquilinos:
     def limpar_inquilinos(self) -> None:
         dados = {}
 
-        with open("inquilinos.json", "w", encoding="utf-8") as f:
+        with open(os.path.join('dados', 'inquilinos.json'), "w", encoding="utf-8") as f:
             json.dump(dados, f, indent=4, ensure_ascii=False)
 
         self.dados = self.carregar_dados()
 
 
     def cadastrar_atualizar_inquilino(self, inquilino):
-        with open("inquilinos.json", "r", encoding="utf-8") as f:
+        with open(os.path.join('dados', 'inquilinos.json'), "r", encoding="utf-8") as f:
             dados = json.load(f)
 
         dados[inquilino['nome']] = {
@@ -117,7 +118,7 @@ class Inquilinos:
             "consumo_atual": inquilino['consumo_atual']
         }
 
-        with open("inquilinos.json", "w", encoding="utf-8") as f:
+        with open(os.path.join('dados', 'inquilinos.json'), "w", encoding="utf-8") as f:
             json.dump(dados, f, indent=4, ensure_ascii=False)
 
         self.dados = self.carregar_dados()

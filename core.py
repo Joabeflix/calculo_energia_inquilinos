@@ -1,6 +1,7 @@
 from class_dados import Consumo, ValoresKwh, Inquilinos
 from tipos import TipoInquilino, TipoConsumo, TipoValKwr
 import json
+import os
 
 class CalcularEnergia():
     def __init__(self) -> None:
@@ -56,18 +57,13 @@ class CalcularEnergia():
                             "iluminacao_publica": f"{iluminacao_publica:.2f}",
                             "total": f"{total:.2f}"}
             
-        with open("calculo_final.json", "w", encoding="utf-8") as f:
+        with open(os.path.join('dados', 'calculo_final.json'), "w", encoding="utf-8") as f:
             json.dump(valores, f, indent=4)
         return valores
     
     
 if __name__ == "__main__":
-    consumo_geral: TipoConsumo = {"total_consumo": 496,
-                                "consumo_verde": 105.21,
-                                "consumo_amarelo": 390.79,
-                                "consumo_vermelho": 0,
-                                "ilumicacao_publica": 43.93
-                                }
+
     app = CalcularEnergia()
     print(app.calcular_energia())
 

@@ -4,8 +4,9 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 import json
+import os
 
-with open('config.json', mode='r') as f:
+with open(os.path.join('dados', 'config.json'), mode='r') as f:
     config = json.load(f)
 
 

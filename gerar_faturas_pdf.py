@@ -1,7 +1,6 @@
 import json
 from decimal import Decimal
 import os
-
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import mm
