@@ -63,6 +63,9 @@ class Consumo:
     @property
     def consumo_vermelho(self) -> float:
         return self.dados_consumo['consumo_vermelho']        
+    @property
+    def iluminacao_publica(self) -> float:
+        return self.dados_consumo["ilumicacao_publica"]
 
     chaves_alteraveis = Literal['total_consumo',
                                 'consumo_verde',
@@ -83,6 +86,10 @@ class Inquilinos:
     def carregar_dados(self) -> dict:
         with open('inquilinos.json', encoding="utf-8") as file:
             return json.load(file)
+    
+    @property
+    def dados_inquilinos(self):
+        return self.dados
 
     @property
     def inquilinos_cadastrados(self) -> list:
@@ -121,9 +128,18 @@ if __name__ == '__main__':
     # print(inq.inquilinos_cadastrados)
     # print(inq.quantidade_inquilinos)
     x: TipoInquilino = {"nome": "suellen",
-                        "consumo_anterior": 200,
-                        "consumo_atual": 279} 
+                        "consumo_anterior": 231.8,
+                        "consumo_atual": 416.5}
+    y: TipoInquilino = {"nome": "milly",
+                        "consumo_anterior": 248.3,
+                        "consumo_atual": 472.2}
+    z: TipoInquilino = {"nome": "wanderson",
+                        "consumo_anterior": 103.2,
+                        "consumo_atual": 177.4} 
     inq.cadastrar_atualizar_inquilino(inquilino=x)
+    inq.cadastrar_atualizar_inquilino(inquilino=y)
+    inq.cadastrar_atualizar_inquilino(inquilino=z)
+
     print(inq.inquilinos_cadastrados)
     print(inq.quantidade_inquilinos)
     # print('Testando')
