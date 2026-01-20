@@ -50,7 +50,6 @@ def _gerar_pdf_cliente(cliente: str, v: dict, pasta_saida: str):
     c.drawString(25 * mm, y, f"Cliente: {cliente.capitalize()}")
     y -= 10 * mm
 
-    # ===== LEITURA DO MEDIDOR =====
     c.setFillColor(cinza)
     c.rect(25 * mm, y - 28 * mm, largura - 50 * mm, 28 * mm, fill=1)
 

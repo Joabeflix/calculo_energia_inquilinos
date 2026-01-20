@@ -71,7 +71,8 @@ class Consumo:
     chaves_alteraveis = Literal['total_consumo',
                                 'consumo_verde',
                                 'consumo_amarelo',
-                                'consumo_vermelho']
+                                'consumo_vermelho',
+                                'ilumicacao_publica']
     def definir_valores(self, tipo: chaves_alteraveis, valor:  float) -> None:
         with open(os.path.join('dados', 'consumo.json'), "r", encoding="utf-8") as f:
             dados = json.load(f)
