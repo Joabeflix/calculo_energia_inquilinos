@@ -4,7 +4,7 @@ from class_dados import Consumo
 
 
 
-class InterfaceSecundaria:
+class InterfacesSecundarias:
     def __init__(self) -> None:
         self.tela = ttk.Window()
 
@@ -19,7 +19,6 @@ class InterfaceSecundaria:
                             ):
             
             consumo = Consumo()
-
             consumo.definir_valores(tipo='total_consumo', valor=total_consumo)
             consumo.definir_valores(tipo='consumo_verde', valor=consumo_verde)
             consumo.definir_valores(tipo='consumo_amarelo', valor=consumo_amarelo)
@@ -30,19 +29,14 @@ class InterfaceSecundaria:
             consumo = Consumo()
             self.entrada_total_consumo.delete(0, 'end')
             self.entrada_total_consumo.insert(0, f'{consumo.total_consumo}')
-
             self.entrada_consumo_verde.delete(0, 'end')
             self.entrada_consumo_verde.insert(0, f'{consumo.consumo_verde}')
-    
             self.entrada_consumo_amarelo.delete(0, 'end')
             self.entrada_consumo_amarelo.insert(0, f'{consumo.consumo_amarelo}')
-
             self.entrada_consumo_vermelho.delete(0, 'end')
             self.entrada_consumo_vermelho.insert(0, f'{consumo.consumo_vermelho}')
-
             self.entrada_iluminacao_publica.delete(0, 'end')
             self.entrada_iluminacao_publica.insert(0, f'{consumo.iluminacao_publica}')
-
         def tratar_get(x) -> float:
             try:
                 x = float(x)
@@ -52,11 +46,6 @@ class InterfaceSecundaria:
                 messagebox.showerror("Erro", mensagem)
                 print(f'O valor: "{x}" não pode ser convertido para float')
             return 0
-
-
-
-
-
         ttk.Label(self.tela, text="Total Consumo   ----------------> ").place(x=15, y=15)
         self.entrada_total_consumo = ttk.Entry(self.tela, width=10)
         self.entrada_total_consumo.place(x=200, y=10)
@@ -99,7 +88,7 @@ class InterfaceSecundaria:
 
 
 
-class Interface:
+class InterfacePrincipal:
     def __init__(self) -> None:
         self.tela = ttk.Window(themename='vapor')
         self.consumo = Consumo()
@@ -144,5 +133,5 @@ class Interface:
 
 if __name__ == '__main__':
     # app = Interface().iniciar()
-    app_2 = InterfaceSecundaria()
+    app_2 = InterfacesSecundarias()
     app_2.tela_adicionar_consumo()
