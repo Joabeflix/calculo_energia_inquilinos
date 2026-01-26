@@ -85,7 +85,7 @@ class InterfacesSecundarias:
         self.tela.mainloop()
 
 
-
+    
 
 
 class InterfacePrincipal:
