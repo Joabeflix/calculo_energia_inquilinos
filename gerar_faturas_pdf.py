@@ -134,5 +134,5 @@ def _gerar_pdf_cliente(cliente: str, v: dict, pasta_saida: str):
     c.save()
 
 
-gerar_faturas_pdf('calculo_final.json')
+gerar_faturas_pdf(rf'dados\calculo_final.json')
 
