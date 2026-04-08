@@ -1,14 +1,14 @@
 {
     "suellen": {
-        "consumo_anterior": 574.1,
-        "consumo_atual": 740.2
+        "consumo_anterior": 740.2,
+        "consumo_atual": 893.2
     },
     "milly": {
-        "consumo_anterior": 669.8,
-        "consumo_atual": 854.7
+        "consumo_anterior": 854.7,
+        "consumo_atual": 1053.2
     },
     "wanderson": {
-        "consumo_anterior": 263.5,
-        "consumo_atual": 336.4
+        "consumo_anterior": 336.4,
+        "consumo_atual": 424.9
     }
 }
