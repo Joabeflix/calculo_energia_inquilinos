@@ -1,5 +1,5 @@
 {
-    "preco_base": 1.01599526,
-    "adicional_amarelo": 0.02395161,
-    "adicional_vermelho": 0.05654905
+    "preco_base": 1.0,
+    "adicional_amarelo": 0.5,
+    "adicional_vermelho": 1.0
 }
