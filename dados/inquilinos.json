@@ -1,14 +1,14 @@
 {
-    "suellen": {
+    "joabe": {
         "consumo_anterior": 0.0,
-        "consumo_atual": 250.0
+        "consumo_atual": 20.0
     },
     "milly": {
         "consumo_anterior": 0.0,
-        "consumo_atual": 250.0
+        "consumo_atual": 80.0
     },
     "wanderson": {
         "consumo_anterior": 0.0,
-        "consumo_atual": 500.0
+        "consumo_atual": 50.0
     }
 }

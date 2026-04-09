@@ -1,7 +1,7 @@
 {
-    "total_consumo": 1000.0,
-    "consumo_verde": 600.0,
-    "consumo_amarelo": 200.0,
-    "consumo_vermelho": 200.0,
-    "ilumicacao_publica": 300.0
+    "total_consumo": 150.0,
+    "consumo_verde": 150.0,
+    "consumo_amarelo": 0.0,
+    "consumo_vermelho": 0.0,
+    "ilumicacao_publica": 45.42
 }

@@ -3,7 +3,7 @@ import os
 from kivy.config import Config
 from gerar_faturas_pdf import gerar_faturas_pdf
 
-# Ajuste de Janela Desktop
+# Configurações de Janela
 Config.set('graphics', 'width', '900')
 Config.set('graphics', 'height', '750')
 Config.set('graphics', 'resizable', '1')
@@ -18,15 +18,12 @@ from kivymd.uix.label import MDLabel
 from class_dados import get_data_path
 from core import CalcularEnergia
 
-# --- FUNÇÃO AUXILIAR DE SEGURANÇA ---
 def safe_float(value):
-    """Converte string para float com segurança, tratando erros de digitação."""
+    """Converte para float com suporte a alta precisão e troca de vírgula por ponto."""
     try:
-        # Limpa espaços e troca vírgula por ponto
         clean_val = str(value).strip().replace(',', '.')
         return float(clean_val) if clean_val else 0.0
     except ValueError:
-        print(f"AVISO: Valor inválido '{value}' convertido para 0.0")
         return 0.0
 
 MAPA_DINAMICO = {
@@ -49,77 +46,96 @@ ScreenManager:
 <ItemInquilino@MDCard>:
     orientation: "vertical"
     size_hint_y: None
-    height: "160dp"
-    padding: "15dp"
-    spacing: "10dp"
-    elevation: 2
-    radius: [12, ]
+    height: "180dp"
+    padding: "20dp"
+    spacing: "15dp"
+    elevation: 3
+    radius: [20, ]
+    md_bg_color: 0.15, 0.15, 0.2, 1 
 
     MDBoxLayout:
         adaptive_height: True
         spacing: "15dp"
         MDTextField:
             id: txt_nome
-            hint_text: "Inquilino"
+            hint_text: "Nome do Inquilino"
             icon_left: "account"
+            mode: "line"
         MDIconButton:
-            icon: "trash-can-outline"
+            icon: "close-circle-outline"
             theme_text_color: "Error"
+            pos_hint: {"center_y": .5}
             on_release: app.root.get_screen('inquilinos').ids.lista_inquilinos.remove_widget(root)
 
     MDGridLayout:
         cols: 2
-        spacing: "20dp"
+        spacing: "25dp"
         adaptive_height: True
         MDTextField:
             id: txt_anterior
-            hint_text: "Kwh Anterior"
+            hint_text: "Leitura Anterior (kWh)"
             input_filter: "float"
+            icon_left: "history"
         MDTextField:
             id: txt_atual
-            hint_text: "Kwh Atual"
+            hint_text: "Leitura Atual (kWh)"
             input_filter: "float"
+            icon_left: "flash"
 
 <MainScreen>:
     name: 'main'
     MDBoxLayout:
         orientation: 'vertical'
+        md_bg_color: 0.1, 0.1, 0.12, 1
+        
         MDTopAppBar:
-            title: "Gestão de Energia 2024"
-            elevation: 2
+            title: "Energy Master v2.0"
+            elevation: 4
+            md_bg_color: 0.2, 0.2, 0.3, 1
 
         MDAnchorLayout:
             MDCard:
                 orientation: 'vertical'
                 size_hint: None, None
-                size: "450dp", "380dp"
+                size: "400dp", "480dp"
                 padding: "30dp"
                 spacing: "20dp"
-                radius: [20, ]
+                radius: [25, ]
                 elevation: 4
+                md_bg_color: 0.15, 0.15, 0.2, 1
+
+                MDIcon:
+                    icon: "lightning-bolt-circle"
+                    halign: "center"
+                    font_size: "80sp"
+                    theme_text_color: "Custom"
+                    text_color: app.theme_cls.primary_color
 
                 MDLabel:
-                    text: "Painel de Controle"
+                    text: "Gestão Residencial"
                     halign: "center"
                     font_style: "H5"
                     bold: True
+                    theme_text_color: "Primary"
 
-                MDRaisedButton:
-                    text: "1. CONFIGURAR TARIFAS"
-                    icon: "cog"
+                MDFillRoundFlatIconButton:
+                    text: "Configurar Tarifas"
+                    icon: "tune"
                     size_hint_x: 1
                     on_release: root.manager.current = 'config'
 
-                MDRaisedButton:
-                    text: "2. GERENCIAR INQUILINOS"
+                MDFillRoundFlatIconButton:
+                    text: "Gerenciar Inquilinos"
                     icon: "account-group"
                     size_hint_x: 1
                     on_release: root.manager.current = 'inquilinos'
 
                 MDRectangleFlatIconButton:
-                    text: "3. EXECUTAR CÁLCULOS"
-                    icon: "calculator-variant"
+                    text: "Gerar Relatórios e PDF"
+                    icon: "file-pdf-box"
                     size_hint_x: 1
+                    text_color: 1, 1, 1, 1
+                    line_color: app.theme_cls.primary_color
                     on_release: root.executar_calculo_geral()
 
 <ConfigScreen>:
@@ -127,84 +143,114 @@ ScreenManager:
     on_enter: root.carregar_dados() 
     MDBoxLayout:
         orientation: 'vertical'
+        md_bg_color: 0.1, 0.1, 0.12, 1
+        
         MDTopAppBar:
-            title: "Configuração de Bandeiras"
+            title: "Configurações"
             left_action_items: [["arrow-left", lambda x: setattr(root.manager, 'current', 'main')]]
 
         ScrollView:
             MDBoxLayout:
                 orientation: 'vertical'
-                padding: "40dp"
+                padding: "30dp"
                 spacing: "20dp"
                 adaptive_height: True
                 size_hint_x: None
-                width: "700dp"
+                width: "600dp"
                 pos_hint: {"center_x": .5}
 
+                # --- CALCULADORA ---
+                MDCard:
+                    orientation: 'vertical'
+                    adaptive_height: True
+                    padding: "15dp"
+                    spacing: "10dp"
+                    radius: [15, ]
+                    md_bg_color: 0.2, 0.2, 0.25, 1
+                    
+                    MDLabel:
+                        text: "Cálculo do Preço Base (Até 9 casas)"
+                        font_style: "Caption"
+                        theme_text_color: "Secondary"
+                    
+                    MDBoxLayout:
+                        spacing: "15dp"
+                        adaptive_height: True
+                        MDTextField:
+                            id: calc_val1
+                            hint_text: "Valor 1"
+                            on_text: root.somar_auxiliar()
+                        MDLabel:
+                            text: "+"
+                            adaptive_size: True
+                            pos_hint: {"center_y": .5}
+                        MDTextField:
+                            id: calc_val2
+                            hint_text: "Valor 2"
+                            on_text: root.somar_auxiliar()
+                        MDLabel:
+                            id: lbl_calc_result
+                            text: "0.000000000"
+                            bold: True
+                            theme_text_color: "Primary"
+
                 MDLabel:
-                    text: "Dados da Fatura"
-                    font_style: "H6"
+                    text: "Consumo por Bandeira (kWh)"
+                    font_style: "Subtitle1"
 
                 MDGridLayout:
                     cols: 2
-                    spacing: "20dp"
-                    adaptive_height: True
-                    MDTextField:
-                        id: total_consumo
-                        hint_text: "Total kWh Geral"
-                        mode: "rectangle"
-                        input_filter: "float"
-                    MDTextField:
-                        id: ilumicacao_publica
-                        hint_text: "Ilum. Pública (R$)"
-                        mode: "rectangle"
-                        input_filter: "float"
-
-                MDGridLayout:
-                    cols: 3
                     spacing: "15dp"
                     adaptive_height: True
                     MDTextField:
-                        id: consumo_verde
-                        hint_text: "kWh Verde"
-                        mode: "fill"
+                        id: total_consumo
+                        hint_text: "Consumo Total Fatura"
                         input_filter: "float"
+                        mode: "rectangle"
+                    MDTextField:
+                        id: ilumicacao_publica
+                        hint_text: "Ilum. Pública (R$)"
+                        input_filter: "float"
+                        mode: "rectangle"
+                    MDTextField:
+                        id: consumo_verde
+                        hint_text: "kWh na Verde"
+                        input_filter: "float"
+                        mode: "rectangle"
                     MDTextField:
                         id: consumo_amarelo
-                        hint_text: "kWh Amarelo"
-                        mode: "fill"
+                        hint_text: "kWh na Amarela"
                         input_filter: "float"
+                        mode: "rectangle"
                     MDTextField:
                         id: consumo_vermelho
-                        hint_text: "kWh Vermelho"
-                        mode: "fill"
+                        hint_text: "kWh na Vermelha"
                         input_filter: "float"
+                        mode: "rectangle"
 
                 MDSeparator:
 
                 MDLabel:
-                    text: "Preços por kWh"
-                    font_style: "H6"
+                    text: "Preços das Tarifas"
+                    font_style: "Subtitle1"
 
                 MDGridLayout:
                     cols: 3
-                    spacing: "15dp"
+                    spacing: "10dp"
                     adaptive_height: True
                     MDTextField:
                         id: preco_base
-                        hint_text: "kWh Base"
-                        input_filter: "float"
+                        hint_text: "Preço kWh"
+                        icon_left: "currency-usd"
                     MDTextField:
                         id: adicional_amarelo
-                        hint_text: "Add. Amarelo"
-                        input_filter: "float"
+                        hint_text: "Add. Amarela"
                     MDTextField:
                         id: adicional_vermelho
-                        hint_text: "Add. Vermelho"
-                        input_filter: "float"
+                        hint_text: "Add. Vermelha"
 
-                MDRaisedButton:
-                    text: "SALVAR TUDO"
+                MDFillRoundFlatButton:
+                    text: "SALVAR CONFIGURAÇÕES"
                     size_hint_x: 1
                     on_release: root.salvar_dados()
 
@@ -215,80 +261,76 @@ ScreenManager:
     
     MDBoxLayout:
         orientation: 'vertical'
+        md_bg_color: 0.1, 0.1, 0.12, 1
+        
         MDTopAppBar:
-            title: "Cadastro de Inquilinos"
+            title: "Moradores"
             left_action_items: [["arrow-left", lambda x: setattr(root.manager, 'current', 'main')]]
-            right_action_items: [["account-plus", lambda x: root.adicionar_card_vazio()]]
+            right_action_items: [["plus-circle", lambda x: root.adicionar_card_vazio()]]
 
         ScrollView:
             MDBoxLayout:
                 id: lista_inquilinos
                 orientation: 'vertical'
-                padding: "30dp"
+                padding: "20dp"
                 spacing: "20dp"
                 adaptive_height: True
                 size_hint_x: None
-                width: "600dp"
+                width: "500dp"
                 pos_hint: {"center_x": .5}
 
         MDBoxLayout:
             adaptive_height: True
             padding: "20dp"
-            MDRaisedButton:
+            MDFillRoundFlatIconButton:
                 text: "SALVAR LISTA"
+                icon: "content-save-check"
                 size_hint_x: 1
                 on_release: root.salvar_dados()
 '''
 
-def mostrar_snackbar(texto, cor=(0.1, 0.1, 0.1, 1)):
-    snackbar = MDSnackbar(
-        MDLabel(text=texto, theme_text_color="Custom", text_color=(1,1,1,1)),
-        md_bg_color=cor,
-        radius=[10, 10, 10, 10],
-    )
-    snackbar.size_hint_x = None
-    snackbar.width = "400dp"
-    snackbar.open()
-
 class MainScreen(Screen):
     def executar_calculo_geral(self):
         try:
-            # 1. Realiza os cálculos matemáticos e gera o calculo_final.json
             calculo = CalcularEnergia()
             calculo.calcular_energia()
-            
-            # 2. Chama sua função de PDF apontando para o arquivo gerado
-            # O prefixo 'rf' trata a string como bruta para evitar problemas com backslashes no Windows
             caminho_json = get_data_path('calculo_final.json')
             gerar_faturas_pdf(caminho_json)
-            
-            mostrar_snackbar("Cálculo concluído e PDFs gerados!", (0, .4, .2, 1))
-            
+            mostrar_snackbar("Processado com sucesso!", (0.1, 0.6, 0.3, 1))
         except Exception as e:
-            # Exibe o erro real no console para debug e avisa o usuário
-            print(f"Erro detalhado: {e}")
-            mostrar_snackbar("Erro: Verifique os dados ou o gerador de PDF.", (.7, .1, .1, 1))
+            mostrar_snackbar(f"Erro ao processar: {e}", (0.7, 0.1, 0.1, 1))
+
 class ConfigScreen(Screen):
+    def somar_auxiliar(self):
+        v1 = safe_float(self.ids.calc_val1.text)
+        v2 = safe_float(self.ids.calc_val2.text)
+        resultado = v1 + v2
+        str_resultado = f"{resultado:.9f}"
+        self.ids.lbl_calc_result.text = str_resultado
+        self.ids.preco_base.text = str_resultado
+
     def carregar_dados(self):
         for widget_id, info in MAPA_DINAMICO.items():
             path = get_data_path(info["file"])
             if os.path.exists(path):
                 with open(path, 'r', encoding="utf-8") as f:
-                    dados = json.load(f)
-                    if info["key"] in dados and widget_id in self.ids:
-                        self.ids[widget_id].text = str(dados[info["key"]])
+                    try:
+                        dados = json.load(f)
+                        if info["key"] in dados and widget_id in self.ids:
+                            val = dados[info["key"]]
+                            if widget_id == "preco_base":
+                                self.ids[widget_id].text = f"{float(val):.9f}"
+                            else:
+                                self.ids[widget_id].text = str(val)
+                    except: pass
 
     def salvar_dados(self):
         dados_por_arquivo = {}
         for widget_id, info in MAPA_DINAMICO.items():
             if widget_id in self.ids:
                 filename = info["file"]
-                if filename not in dados_por_arquivo: 
-                    dados_por_arquivo[filename] = {}
-                
-                # Uso do safe_float para evitar crash
-                val = self.ids[widget_id].text
-                dados_por_arquivo[filename][info["key"]] = safe_float(val)
+                if filename not in dados_por_arquivo: dados_por_arquivo[filename] = {}
+                dados_por_arquivo[filename][info["key"]] = safe_float(self.ids[widget_id].text)
 
         for filename, novos_valores in dados_por_arquivo.items():
             path = get_data_path(filename)
@@ -300,8 +342,7 @@ class ConfigScreen(Screen):
             conteudo.update(novos_valores)
             with open(path, 'w', encoding="utf-8") as f:
                 json.dump(conteudo, f, indent=4, ensure_ascii=False)
-        
-        mostrar_snackbar("Tarifas atualizadas!", (0, .4, .2, 1))
+        mostrar_snackbar("Configurações Salvas!", (0.1, 0.4, 0.8, 1))
 
 class InquilinosScreen(Screen):
     def carregar_dados(self):
@@ -329,23 +370,30 @@ class InquilinosScreen(Screen):
         for card in self.ids.lista_inquilinos.children:
             nome = card.ids.txt_nome.text.strip()
             if not nome: continue
-            
-            # Conversão segura para os valores do inquilino
-            ant = safe_float(card.ids.txt_anterior.text)
-            atu = safe_float(card.ids.txt_atual.text)
-            
-            novos_dados[nome] = {"consumo_anterior": ant, "consumo_atual": atu}
-        
+            novos_dados[nome] = {
+                "consumo_anterior": safe_float(card.ids.txt_anterior.text),
+                "consumo_atual": safe_float(card.ids.txt_atual.text)
+            }
         path = get_data_path("inquilinos.json")
         with open(path, "w", encoding="utf-8") as f:
             json.dump(novos_dados, f, indent=4, ensure_ascii=False)
-        mostrar_snackbar("Lista de inquilinos salva!", (0, .4, .2, 1))
+        mostrar_snackbar("Lista Salva!", (0.1, 0.4, 0.8, 1))
 
 class MyApp(MDApp):
     def build(self):
-        self.theme_cls.primary_palette = "Indigo"
+        self.theme_cls.primary_palette = "DeepPurple"
         self.theme_cls.theme_style = "Dark" 
         return Builder.load_string(KV)
+
+def mostrar_snackbar(texto, cor):
+    snackbar = MDSnackbar(
+        MDLabel(text=texto, theme_text_color="Custom", text_color=(1,1,1,1)),
+        md_bg_color=cor,
+        radius=[10, 10, 10, 10],
+    )
+    snackbar.size_hint_x = None
+    snackbar.width = "300dp"
+    snackbar.open()
 
 if __name__ == '__main__':
     MyApp().run()
