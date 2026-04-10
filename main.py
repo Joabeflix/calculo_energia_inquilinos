@@ -315,7 +315,6 @@ class CalcularEnergia():
         self.atualizar_bases()
 
     def atualizar_bases(self):
-        """Recarrega os dados globais de consumo e recalcula as porcentagens."""
         consumo_global = Consumo()
         self.consumo_total = consumo_global.total_consumo
         self.consumo_verde = consumo_global.consumo_verde

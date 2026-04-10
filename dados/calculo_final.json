@@ -1,19 +1,19 @@
 {
-    "wanderson": {
+    "joao": {
         "registro_kwh_anterior": 0.0,
-        "registro_kwh_atual": 50.0,
-        "kwh_consumido_mes": "50.00",
+        "registro_kwh_atual": 500.0,
+        "kwh_consumido_mes": "500.00",
         "valor_kwh_verde": "3.0000",
         "valor_kwh_amarelo": "3.9000",
         "valor_kwh_vermelho": "4.9000",
-        "consumo_kwh_verde": "49.77",
-        "consumo_kwh_amarelo": "0.10",
-        "consumo_kwh_vermelho": "0.13",
-        "valor_verde": "149.30",
-        "valor_amarelo": "0.39",
-        "valor_vermelho": "0.65",
-        "iluminacao_publica": "22.71",
-        "total": "173.06"
+        "consumo_kwh_verde": "497.68",
+        "consumo_kwh_amarelo": "0.99",
+        "consumo_kwh_vermelho": "1.32",
+        "valor_verde": "1493.05",
+        "valor_amarelo": "3.87",
+        "valor_vermelho": "6.49",
+        "iluminacao_publica": "15.14",
+        "total": "1518.55"
     },
     "milly": {
         "registro_kwh_anterior": 0.0,
@@ -28,7 +28,23 @@
         "valor_verde": "238.89",
         "valor_amarelo": "0.62",
         "valor_vermelho": "1.04",
-        "iluminacao_publica": "22.71",
-        "total": "263.26"
+        "iluminacao_publica": "15.14",
+        "total": "255.69"
+    },
+    "wanderson": {
+        "registro_kwh_anterior": 0.0,
+        "registro_kwh_atual": 50.0,
+        "kwh_consumido_mes": "50.00",
+        "valor_kwh_verde": "3.0000",
+        "valor_kwh_amarelo": "3.9000",
+        "valor_kwh_vermelho": "4.9000",
+        "consumo_kwh_verde": "49.77",
+        "consumo_kwh_amarelo": "0.10",
+        "consumo_kwh_vermelho": "0.13",
+        "valor_verde": "149.30",
+        "valor_amarelo": "0.39",
+        "valor_vermelho": "0.65",
+        "iluminacao_publica": "15.14",
+        "total": "165.48"
     }
 }
