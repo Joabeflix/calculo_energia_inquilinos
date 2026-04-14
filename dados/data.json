@@ -1,10 +1,11 @@
 {
-    "preco_base": 1.00376049,
+    "preco_base": 5.7,
     "adicional_amarelo": 0.05,
     "adicional_vermelho": 0.06,
     "total_consumo": 476.0,
     "consumo_verde": 476.0,
     "consumo_amarelo": 0.4,
     "consumo_vermelho": 0.5,
-    "ilumicacao_publica": 44.93
+    "ilumicacao_publica": 44.93,
+    "iluminacao_publica": 56.7
 }
