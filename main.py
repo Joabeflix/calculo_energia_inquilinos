@@ -58,7 +58,8 @@ def _gerar_pdf_cliente(cliente: str, v: dict, pasta_saida: str):
     largura, altura = A4
 
     cor_principal = HexColor("#1f4fd8")
-    cinza = HexColor("#f2f2f2")
+    cinza_claro = HexColor("#f2f2f2")
+    cinza_escuro = HexColor("#555555")
 
     # ===== CABEÇALHO =====
     c.setFillColor(cor_principal)
@@ -78,7 +79,7 @@ def _gerar_pdf_cliente(cliente: str, v: dict, pasta_saida: str):
     c.drawString(25 * mm, y, f"Cliente: {cliente.capitalize()}")
     y -= 10 * mm
 
-    c.setFillColor(cinza)
+    c.setFillColor(cinza_claro)
     c.rect(25 * mm, y - 28 * mm, largura - 50 * mm, 28 * mm, fill=1)
 
     c.setFillColor(black)
@@ -102,7 +103,7 @@ def _gerar_pdf_cliente(cliente: str, v: dict, pasta_saida: str):
     c.drawString(25 * mm, y, "Detalhamento do Consumo por Bandeira")
     y -= 8 * mm
 
-    c.setFillColor(cinza)
+    c.setFillColor(cinza_claro)
     c.rect(25 * mm, y - 40 * mm, largura - 50 * mm, 40 * mm, fill=1)
 
     c.setFillColor(black)
@@ -159,9 +160,40 @@ def _gerar_pdf_cliente(cliente: str, v: dict, pasta_saida: str):
         f"TOTAL A PAGAR: R$ {Decimal(v['total']):.2f}"
     )
 
+    # ==========================================================
+    # NOVO: EXPLICAÇÃO DO CÁLCULO (MEMÓRIA DE CÁLCULO)
+    # ==========================================================
+    y_explica = y_final - 40 * mm
+    
+    # Linha divisória
+    c.setStrokeColor(cor_principal)
+    c.setLineWidth(0.5)
+    c.line(25 * mm, y_explica + 5 * mm, largura - 25 * mm, y_explica + 5 * mm)
+
+    c.setFillColor(cor_principal)
+    c.setFont("Helvetica-Bold", 11)
+    c.drawString(25 * mm, y_explica, "ENTENDA SEU CÁLCULO:")
+    
+    c.setFillColor(cinza_escuro)
+    c.setFont("Helvetica", 9)
+    y_text = y_explica - 6 * mm
+    
+    linhas_explicacao = [
+        f"1. Consumo: Leitura Atual ({v['registro_kwh_atual']}) - Leitura Anterior ({v['registro_kwh_anterior']}) = {v['kwh_consumido_mes']} kWh.",
+        f"2. Bandeiras: O consumo é rateado proporcionalmente conforme a fatura da concessionária.",
+        f"   - Verde: {v['consumo_kwh_verde']} kWh x R$ {v['valor_kwh_verde']}",
+        f"   - Amarela: {v['consumo_kwh_amarelo']} kWh x R$ {v['valor_kwh_amarelo']}",
+        f"   - Vermelha: {v['consumo_kwh_vermelho']} kWh x R$ {v['valor_kwh_vermelho']}",
+        f"3. Iluminação Pública: Valor total rateado igualmente entre os moradores.",
+        f"Fórmula Final: (Soma das Bandeiras) + Iluminação Pública = R$ {v['total']}."
+    ]
+
+    for linha in linhas_explicacao:
+        c.drawString(25 * mm, y_text, linha)
+        y_text -= 5 * mm
+
     c.showPage()
     c.save()
-
 
 
 def get_data_path(filename: str) -> str:
@@ -462,7 +494,7 @@ ScreenManager:
         md_bg_color: 0.1, 0.1, 0.12, 1
         
         MDTopAppBar:
-            title: "Energy Master v2.0"
+            title: "Energy Master v0.5"
             elevation: 4
             md_bg_color: 0.2, 0.2, 0.3, 1
 
@@ -478,14 +510,14 @@ ScreenManager:
                 md_bg_color: 0.15, 0.15, 0.2, 1
 
                 MDIcon:
-                    icon: "lightning-bolt-circle"
+                    icon: "home-lightning-bolt"
                     halign: "center"
                     font_size: "80sp"
                     theme_text_color: "Custom"
                     text_color: app.theme_cls.primary_color
 
                 MDLabel:
-                    text: "Gestão Residencial"
+                    text: "Gestão Energia Residencial"
                     halign: "center"
                     font_style: "H5"
                     bold: True
@@ -754,8 +786,12 @@ class InquilinosScreen(Screen):
 
 class MyApp(MDApp):
     def build(self):
-        self.theme_cls.primary_palette = "DeepPurple"
-        self.theme_cls.theme_style = "Dark" 
+        self.title = "Energy Master"
+        self.theme_cls.theme_style = "Dark"
+        self.theme_cls.primary_palette = "Cyan"
+        self.theme_cls.accent_palette = "Amber"
+        # self.theme_cls.primary_palette = "DeepPurple"
+        # self.theme_cls.theme_style = "Dark" 
         return Builder.load_string(KV)
 
 def mostrar_snackbar(texto, cor):
