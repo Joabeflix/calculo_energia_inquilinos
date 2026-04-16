@@ -1,11 +1,52 @@
 {
-    "preco_base": 5.7,
-    "adicional_amarelo": 0.05,
-    "adicional_vermelho": 0.06,
-    "total_consumo": 476.0,
-    "consumo_verde": 476.0,
-    "consumo_amarelo": 0.4,
-    "consumo_vermelho": 0.5,
-    "ilumicacao_publica": 44.93,
-    "iluminacao_publica": 56.7
+    "preco_base": 1.0,
+    "adicional_amarelo": 0.3,
+    "adicional_vermelho": 0.5,
+    "total_consumo": 100.0,
+    "consumo_verde": 50.0,
+    "consumo_amarelo": 25.0,
+    "consumo_vermelho": 25.0,
+    "iluminacao_publica": 45.92,
+    "inquilinos": {
+        "jojo": {
+            "consumo_anterior": 50.0,
+            "consumo_atual": 100.0,
+            "calculo_inquilino": {
+                "registro_kwh_anterior": 50.0,
+                "registro_kwh_atual": 100.0,
+                "kwh_consumido_mes": "50.00",
+                "valor_kwh_verde": "1.0000",
+                "valor_kwh_amarelo": "1.3000",
+                "valor_kwh_vermelho": "1.5000",
+                "consumo_kwh_verde": "25.00",
+                "consumo_kwh_amarelo": "12.50",
+                "consumo_kwh_vermelho": "12.50",
+                "valor_verde": "25.00",
+                "valor_amarelo": "16.25",
+                "valor_vermelho": "18.75",
+                "iluminacao_publica": "22.96",
+                "total": "82.96"
+            }
+        },
+        "maria": {
+            "consumo_anterior": 0.0,
+            "consumo_atual": 50.0,
+            "calculo_inquilino": {
+                "registro_kwh_anterior": 0.0,
+                "registro_kwh_atual": 50.0,
+                "kwh_consumido_mes": "50.00",
+                "valor_kwh_verde": "1.0000",
+                "valor_kwh_amarelo": "1.3000",
+                "valor_kwh_vermelho": "1.5000",
+                "consumo_kwh_verde": "25.00",
+                "consumo_kwh_amarelo": "12.50",
+                "consumo_kwh_vermelho": "12.50",
+                "valor_verde": "25.00",
+                "valor_amarelo": "16.25",
+                "valor_vermelho": "18.75",
+                "iluminacao_publica": "22.96",
+                "total": "82.96"
+            }
+        }
+    }
 }
