@@ -8,44 +8,64 @@
     "consumo_vermelho": 25.0,
     "iluminacao_publica": 45.92,
     "inquilinos": {
-        "jojo": {
-            "consumo_anterior": 50.0,
-            "consumo_atual": 100.0,
+        "guilherme": {
+            "consumo_anterior": 130.0,
+            "consumo_atual": 300.0,
             "calculo_inquilino": {
-                "registro_kwh_anterior": 50.0,
-                "registro_kwh_atual": 100.0,
-                "kwh_consumido_mes": "50.00",
+                "registro_kwh_anterior": 130.0,
+                "registro_kwh_atual": 300.0,
+                "kwh_consumido_mes": "170.00",
                 "valor_kwh_verde": "1.0000",
                 "valor_kwh_amarelo": "1.3000",
                 "valor_kwh_vermelho": "1.5000",
-                "consumo_kwh_verde": "25.00",
-                "consumo_kwh_amarelo": "12.50",
-                "consumo_kwh_vermelho": "12.50",
-                "valor_verde": "25.00",
-                "valor_amarelo": "16.25",
-                "valor_vermelho": "18.75",
-                "iluminacao_publica": "22.96",
-                "total": "82.96"
+                "consumo_kwh_verde": "85.00",
+                "consumo_kwh_amarelo": "42.50",
+                "consumo_kwh_vermelho": "42.50",
+                "valor_verde": "85.00",
+                "valor_amarelo": "55.25",
+                "valor_vermelho": "63.75",
+                "iluminacao_publica": "15.31",
+                "total": "219.31"
             }
         },
         "maria": {
-            "consumo_anterior": 0.0,
-            "consumo_atual": 50.0,
+            "consumo_anterior": 90.0,
+            "consumo_atual": 230.0,
             "calculo_inquilino": {
-                "registro_kwh_anterior": 0.0,
-                "registro_kwh_atual": 50.0,
-                "kwh_consumido_mes": "50.00",
+                "registro_kwh_anterior": 90.0,
+                "registro_kwh_atual": 230.0,
+                "kwh_consumido_mes": "140.00",
                 "valor_kwh_verde": "1.0000",
                 "valor_kwh_amarelo": "1.3000",
                 "valor_kwh_vermelho": "1.5000",
-                "consumo_kwh_verde": "25.00",
-                "consumo_kwh_amarelo": "12.50",
-                "consumo_kwh_vermelho": "12.50",
-                "valor_verde": "25.00",
-                "valor_amarelo": "16.25",
-                "valor_vermelho": "18.75",
-                "iluminacao_publica": "22.96",
-                "total": "82.96"
+                "consumo_kwh_verde": "70.00",
+                "consumo_kwh_amarelo": "35.00",
+                "consumo_kwh_vermelho": "35.00",
+                "valor_verde": "70.00",
+                "valor_amarelo": "45.50",
+                "valor_vermelho": "52.50",
+                "iluminacao_publica": "15.31",
+                "total": "183.31"
+            }
+        },
+        "marcos": {
+            "consumo_anterior": 29.0,
+            "consumo_atual": 45.0,
+            "calculo_inquilino": {
+                "registro_kwh_anterior": 29.0,
+                "registro_kwh_atual": 45.0,
+                "kwh_consumido_mes": "16.00",
+                "valor_kwh_verde": "1.0000",
+                "valor_kwh_amarelo": "1.3000",
+                "valor_kwh_vermelho": "1.5000",
+                "consumo_kwh_verde": "8.00",
+                "consumo_kwh_amarelo": "4.00",
+                "consumo_kwh_vermelho": "4.00",
+                "valor_verde": "8.00",
+                "valor_amarelo": "5.20",
+                "valor_vermelho": "6.00",
+                "iluminacao_publica": "15.31",
+                "total": "34.51"
             }
         }
     }
