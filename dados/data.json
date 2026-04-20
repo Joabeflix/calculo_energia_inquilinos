@@ -1,31 +1,71 @@
 {
-    "preco_base": 1.2,
-    "adicional_amarelo": 0.3,
-    "adicional_vermelho": 0.5,
-    "total_consumo": 250.0,
-    "consumo_verde": 100.0,
-    "consumo_amarelo": 100.0,
-    "consumo_vermelho": 50.0,
-    "iluminacao_publica": 45.92,
+    "preco_base": 1.00376049,
+    "adicional_amarelo": 0.03,
+    "adicional_vermelho": 0.05,
+    "total_consumo": 476.0,
+    "consumo_verde": 476.0,
+    "consumo_amarelo": 0.0,
+    "consumo_vermelho": 0.0,
+    "iluminacao_publica": 43.93,
     "inquilinos": {
-        "be": {
-            "consumo_anterior": 0.0,
-            "consumo_atual": 10.0,
+        "Suellen": {
+            "consumo_anterior": 740.2,
+            "consumo_atual": 893.2,
             "calculo_inquilino": {
-                "registro_kwh_anterior": 0.0,
-                "registro_kwh_atual": 10.0,
-                "kwh_consumido_mes": "10.00",
-                "valor_kwh_verde": "1.2000",
-                "valor_kwh_amarelo": "1.5000",
-                "valor_kwh_vermelho": "1.7000",
-                "consumo_kwh_verde": "4.00",
-                "consumo_kwh_amarelo": "4.00",
-                "consumo_kwh_vermelho": "2.00",
-                "valor_verde": "4.80",
-                "valor_amarelo": "6.00",
-                "valor_vermelho": "3.40",
-                "iluminacao_publica": "45.92",
-                "total": "60.12"
+                "registro_kwh_anterior": 740.2,
+                "registro_kwh_atual": 893.2,
+                "kwh_consumido_mes": "153.00",
+                "valor_kwh_verde": "1.0038",
+                "valor_kwh_amarelo": "1.0338",
+                "valor_kwh_vermelho": "1.0538",
+                "consumo_kwh_verde": "153.00",
+                "consumo_kwh_amarelo": "0.00",
+                "consumo_kwh_vermelho": "0.00",
+                "valor_verde": "153.58",
+                "valor_amarelo": "0.00",
+                "valor_vermelho": "0.00",
+                "iluminacao_publica": "14.64",
+                "total": "168.22"
+            }
+        },
+        "Milly": {
+            "consumo_anterior": 854.7,
+            "consumo_atual": 1053.2,
+            "calculo_inquilino": {
+                "registro_kwh_anterior": 854.7,
+                "registro_kwh_atual": 1053.2,
+                "kwh_consumido_mes": "198.50",
+                "valor_kwh_verde": "1.0038",
+                "valor_kwh_amarelo": "1.0338",
+                "valor_kwh_vermelho": "1.0538",
+                "consumo_kwh_verde": "198.50",
+                "consumo_kwh_amarelo": "0.00",
+                "consumo_kwh_vermelho": "0.00",
+                "valor_verde": "199.25",
+                "valor_amarelo": "0.00",
+                "valor_vermelho": "0.00",
+                "iluminacao_publica": "14.64",
+                "total": "213.89"
+            }
+        },
+        "Wanderson": {
+            "consumo_anterior": 336.4,
+            "consumo_atual": 424.9,
+            "calculo_inquilino": {
+                "registro_kwh_anterior": 336.4,
+                "registro_kwh_atual": 424.9,
+                "kwh_consumido_mes": "88.50",
+                "valor_kwh_verde": "1.0038",
+                "valor_kwh_amarelo": "1.0338",
+                "valor_kwh_vermelho": "1.0538",
+                "consumo_kwh_verde": "88.50",
+                "consumo_kwh_amarelo": "0.00",
+                "consumo_kwh_vermelho": "0.00",
+                "valor_verde": "88.83",
+                "valor_amarelo": "0.00",
+                "valor_vermelho": "0.00",
+                "iluminacao_publica": "14.64",
+                "total": "103.48"
             }
         }
     }

@@ -33,6 +33,10 @@ def gerar_faturas_pdf(
     return arquivos_gerados
 
 
+def _money_per_kwh(value: str | float | Decimal, digits: int = 5) -> str:
+    return f"R$ {Decimal(str(value)):.{digits}f}/kWh"
+
+
 def _money(value: str | float | Decimal) -> str:
     return f"R$ {Decimal(str(value)):.2f}"
 
@@ -84,6 +88,33 @@ def _draw_metric_card(
     pdf.drawString(x + 4 * mm, y - 15 * mm, valor)
 
 
+def _draw_info_box(
+    pdf: canvas.Canvas,
+    x: float,
+    y_top: float,
+    width: float,
+    height: float,
+    titulo: str,
+    linhas: list[str],
+    cor_titulo: HexColor,
+    cor_fundo: HexColor,
+    cor_texto: HexColor,
+    font_size: float = 8.4,
+) -> None:
+    pdf.setFillColor(cor_fundo)
+    pdf.roundRect(x, y_top - height, width, height, 4 * mm, fill=1, stroke=0)
+    pdf.setFillColor(cor_titulo)
+    pdf.setFont("Helvetica-Bold", 10)
+    pdf.drawString(x + 5 * mm, y_top - 7 * mm, titulo.upper())
+
+    pdf.setFillColor(cor_texto)
+    pdf.setFont("Helvetica", font_size)
+    y_text = y_top - 13 * mm
+    for linha in linhas:
+        pdf.drawString(x + 5 * mm, y_text, linha)
+        y_text -= 4.7 * mm
+
+
 def _gerar_pdf_cliente(cliente: str, valores: dict, pasta_saida: Path) -> Path:
     arquivo_pdf = pasta_saida / f"fatura_{cliente}.pdf"
 
@@ -110,26 +141,26 @@ def _gerar_pdf_cliente(cliente: str, valores: dict, pasta_saida: Path) -> Path:
     )
 
     pdf.setFillColor(azul_principal)
-    pdf.rect(0, altura - 44 * mm, largura, 44 * mm, fill=1, stroke=0)
+    pdf.rect(0, altura - 34 * mm, largura, 34 * mm, fill=1, stroke=0)
 
     pdf.setFillColor(white)
-    pdf.setFont("Helvetica-Bold", 19)
-    pdf.drawString(margem_x, altura - 21 * mm, "FATURA DE ENERGIA")
-    pdf.setFont("Helvetica", 10)
-    pdf.drawString(margem_x, altura - 29 * mm, "Resumo individual do rateio de consumo")
-    pdf.drawRightString(largura - margem_x, altura - 21 * mm, f"Cliente: {cliente.upper()}")
+    pdf.setFont("Helvetica-Bold", 17)
+    pdf.drawString(margem_x, altura - 17 * mm, "FATURA DE ENERGIA")
+    pdf.setFont("Helvetica", 9)
+    pdf.drawString(margem_x, altura - 24 * mm, "Resumo individual do rateio de consumo")
+    pdf.drawRightString(largura - margem_x, altura - 17 * mm, f"Cliente: {cliente.upper()}")
 
-    y = altura - 58 * mm
+    y = altura - 44 * mm
     _draw_section_title(pdf, margem_x, y, "Leituras e consumo", azul_principal)
-    y -= 5 * mm
+    y -= 4 * mm
 
     pdf.setFillColor(cinza_fundo)
-    pdf.roundRect(margem_x, y - 24 * mm, largura_util, 24 * mm, 4 * mm, fill=1, stroke=0)
+    pdf.roundRect(margem_x, y - 20 * mm, largura_util, 20 * mm, 4 * mm, fill=1, stroke=0)
 
     _draw_label_value(
         pdf,
         margem_x + 6 * mm,
-        y - 5 * mm,
+        y - 4 * mm,
         "Leitura anterior",
         f"{_number(valores['registro_kwh_anterior'])} kWh",
         cinza_texto,
@@ -138,7 +169,7 @@ def _gerar_pdf_cliente(cliente: str, valores: dict, pasta_saida: Path) -> Path:
     _draw_label_value(
         pdf,
         margem_x + 54 * mm,
-        y - 5 * mm,
+        y - 4 * mm,
         "Leitura atual",
         f"{_number(valores['registro_kwh_atual'])} kWh",
         cinza_texto,
@@ -147,16 +178,16 @@ def _gerar_pdf_cliente(cliente: str, valores: dict, pasta_saida: Path) -> Path:
     _draw_label_value(
         pdf,
         margem_x + 102 * mm,
-        y - 5 * mm,
+        y - 4 * mm,
         "Consumo no mes",
         f"{_number(valores['kwh_consumido_mes'])} kWh",
         cinza_texto,
         azul_principal,
     )
 
-    y -= 34 * mm
+    y -= 28 * mm
     _draw_section_title(pdf, margem_x, y, "Resumo financeiro", azul_principal)
-    y -= 6 * mm
+    y -= 5 * mm
 
     card_w = (largura_util - 10 * mm) / 2
     _draw_metric_card(
@@ -164,8 +195,8 @@ def _gerar_pdf_cliente(cliente: str, valores: dict, pasta_saida: Path) -> Path:
         margem_x,
         y,
         card_w,
-        20 * mm,
-        "Total das bandeiras",
+        18 * mm,
+        "Total gasto",
         _money(total_bandeiras),
         azul_secundario,
         cinza_texto_escuro,
@@ -175,25 +206,25 @@ def _gerar_pdf_cliente(cliente: str, valores: dict, pasta_saida: Path) -> Path:
         margem_x + card_w + 10 * mm,
         y,
         card_w,
-        20 * mm,
+        18 * mm,
         "Total a pagar",
         _money(valores["total"]),
         azul_principal,
         white,
     )
 
-    y -= 30 * mm
+    y -= 25 * mm
     _draw_section_title(pdf, margem_x, y, "Detalhamento por bandeira", azul_principal)
-    y -= 6 * mm
+    y -= 5 * mm
 
     tabela_y = y
-    tabela_h = 42 * mm
+    tabela_h = 36 * mm
     pdf.setStrokeColor(cinza_borda)
     pdf.setFillColor(white)
     pdf.roundRect(margem_x, tabela_y - tabela_h, largura_util, tabela_h, 4 * mm, fill=1, stroke=1)
 
     pdf.setFillColor(cinza_fundo)
-    pdf.roundRect(margem_x + 1, tabela_y - 10 * mm, largura_util - 2, 10 * mm, 3 * mm, fill=1, stroke=0)
+    pdf.roundRect(margem_x + 1, tabela_y - 9 * mm, largura_util - 2, 9 * mm, 3 * mm, fill=1, stroke=0)
 
     col_nome = margem_x + 6 * mm
     col_consumo = margem_x + 86 * mm
@@ -202,10 +233,10 @@ def _gerar_pdf_cliente(cliente: str, valores: dict, pasta_saida: Path) -> Path:
 
     pdf.setFillColor(cinza_texto_escuro)
     pdf.setFont("Helvetica-Bold", 9)
-    pdf.drawString(col_nome, tabela_y - 6.5 * mm, "Bandeira")
-    pdf.drawRightString(col_consumo, tabela_y - 6.5 * mm, "Consumo (kWh)")
-    pdf.drawRightString(col_tarifa, tabela_y - 6.5 * mm, "Tarifa")
-    pdf.drawRightString(col_total, tabela_y - 6.5 * mm, "Subtotal")
+    pdf.drawString(col_nome, tabela_y - 5.8 * mm, "Bandeira")
+    pdf.drawRightString(col_consumo, tabela_y - 5.8 * mm, "Consumo (kWh)")
+    pdf.drawRightString(col_tarifa, tabela_y - 5.8 * mm, "Tarifa (R$/kWh)")
+    pdf.drawRightString(col_total, tabela_y - 5.8 * mm, "Subtotal")
 
     linhas = [
         ("Verde", valores["consumo_kwh_verde"], valores["valor_kwh_verde"], valores["valor_verde"], verde_suave),
@@ -213,57 +244,89 @@ def _gerar_pdf_cliente(cliente: str, valores: dict, pasta_saida: Path) -> Path:
         ("Vermelha", valores["consumo_kwh_vermelho"], valores["valor_kwh_vermelho"], valores["valor_vermelho"], vermelho_suave),
     ]
 
-    y_linha = tabela_y - 15 * mm
+    y_linha = tabela_y - 13 * mm
     for nome, consumo, tarifa, subtotal, cor_linha in linhas:
         pdf.setFillColor(cor_linha)
-        pdf.roundRect(margem_x + 3 * mm, y_linha - 4.5 * mm, largura_util - 6 * mm, 7 * mm, 2 * mm, fill=1, stroke=0)
+        pdf.roundRect(margem_x + 3 * mm, y_linha - 4.2 * mm, largura_util - 6 * mm, 6.5 * mm, 2 * mm, fill=1, stroke=0)
         pdf.setFillColor(cinza_texto_escuro)
         pdf.setFont("Helvetica-Bold", 9)
-        pdf.drawString(col_nome, y_linha, nome)
+        y_texto_linha = y_linha - 2 * mm
+        pdf.drawString(col_nome, y_texto_linha, nome)
         pdf.setFont("Helvetica", 9)
-        pdf.drawRightString(col_consumo, y_linha, _number(consumo))
-        pdf.drawRightString(col_tarifa, y_linha, _money(tarifa))
-        pdf.drawRightString(col_total, y_linha, _money(subtotal))
-        y_linha -= 9 * mm
+        pdf.drawRightString(col_consumo, y_texto_linha, _number(consumo))
+        pdf.drawRightString(col_tarifa, y_texto_linha, _money_per_kwh(tarifa))
+        pdf.drawRightString(col_total, y_texto_linha, _money(subtotal))
+        y_linha -= 7.5 * mm
 
-    y -= 54 * mm
+    y -= 45 * mm
     _draw_section_title(pdf, margem_x, y, "Composicao do total", azul_principal)
-    y -= 5 * mm
+    y -= 4 * mm
 
     pdf.setFillColor(cinza_fundo)
-    pdf.roundRect(margem_x, y - 20 * mm, largura_util, 20 * mm, 4 * mm, fill=1, stroke=0)
+    pdf.roundRect(margem_x, y - 17 * mm, largura_util, 17 * mm, 4 * mm, fill=1, stroke=0)
     pdf.setFillColor(cinza_texto_escuro)
-    pdf.setFont("Helvetica", 10)
-    pdf.drawString(margem_x + 6 * mm, y - 7 * mm, "Soma das bandeiras")
-    pdf.drawRightString(margem_x + largura_util - 6 * mm, y - 7 * mm, _money(total_bandeiras))
-    pdf.drawString(margem_x + 6 * mm, y - 14 * mm, "Iluminacao publica")
-    pdf.drawRightString(margem_x + largura_util - 6 * mm, y - 14 * mm, _money(valores["iluminacao_publica"]))
+    pdf.setFont("Helvetica", 9.5)
+    pdf.drawString(margem_x + 6 * mm, y - 6 * mm, "Total gasto")
+    pdf.drawRightString(margem_x + largura_util - 6 * mm, y - 6 * mm, _money(total_bandeiras))
+    pdf.drawString(margem_x + 6 * mm, y - 12 * mm, "Iluminacao publica")
+    pdf.drawRightString(margem_x + largura_util - 6 * mm, y - 12 * mm, _money(valores["iluminacao_publica"]))
 
-    y -= 28 * mm
+    y -= 22 * mm
     pdf.setFillColor(azul_principal)
-    pdf.roundRect(margem_x, y - 14 * mm, largura_util, 14 * mm, 4 * mm, fill=1, stroke=0)
+    pdf.roundRect(margem_x, y - 12 * mm, largura_util, 12 * mm, 4 * mm, fill=1, stroke=0)
     pdf.setFillColor(white)
-    pdf.setFont("Helvetica-Bold", 13)
-    pdf.drawString(margem_x + 6 * mm, y - 8.5 * mm, "TOTAL A PAGAR")
-    pdf.drawRightString(margem_x + largura_util - 6 * mm, y - 8.5 * mm, _money(valores["total"]))
+    pdf.setFont("Helvetica-Bold", 12)
+    pdf.drawString(margem_x + 6 * mm, y - 7.3 * mm, "TOTAL A PAGAR")
+    pdf.drawRightString(margem_x + largura_util - 6 * mm, y - 7.3 * mm, _money(valores["total"]))
 
-    y -= 24 * mm
-    _draw_section_title(pdf, margem_x, y, "Memoria de calculo", azul_principal)
-    y -= 5 * mm
+    explicacao_bandeiras = [
+        "No Brasil, a bandeira tarifaria indica o custo de geracao de energia no periodo.",
+        "Bandeira verde: condicoes mais favoraveis, sem acrescimo extra relevante na tarifa.",
+        "Bandeira amarela: custo de geracao maior, com aumento no valor cobrado por kWh.",
+        "Bandeira vermelha: custo ainda mais alto, com acrescimo maior no valor por kWh.",
+        "Por isso, nesta fatura o valor do kWh muda conforme a composicao da conta principal.",
+    ]
 
     explicacao = [
         f"1. Consumo individual: {_number(valores['registro_kwh_atual'])} - {_number(valores['registro_kwh_anterior'])} = {_number(valores['kwh_consumido_mes'])} kWh.",
         "2. O consumo do morador e distribuido proporcionalmente entre as bandeiras verde, amarela e vermelha.",
-        f"3. Total das bandeiras: {_money(valores['valor_verde'])} + {_money(valores['valor_amarelo'])} + {_money(valores['valor_vermelho'])} = {_money(total_bandeiras)}.",
+        f"3. Total gasto: {_money(valores['valor_verde'])} + {_money(valores['valor_amarelo'])} + {_money(valores['valor_vermelho'])} = {_money(total_bandeiras)}.",
         f"4. Rateio final: {_money(total_bandeiras)} + {_money(valores['iluminacao_publica'])} = {_money(valores['total'])}.",
     ]
 
-    pdf.setFillColor(cinza_texto)
-    pdf.setFont("Helvetica", 9)
-    y_texto = y - 2 * mm
-    for linha in explicacao:
-        pdf.drawString(margem_x, y_texto, linha)
-        y_texto -= 5.5 * mm
+    y -= 18 * mm
+    altura_box_memoria = 28 * mm
+    altura_box_bandeiras = 33 * mm
+
+    _draw_info_box(
+        pdf,
+        margem_x,
+        y,
+        largura_util,
+        altura_box_memoria,
+        "Memoria de calculo",
+        explicacao,
+        azul_principal,
+        cinza_fundo,
+        cinza_texto,
+        font_size=8.4,
+    )
+
+    y -= altura_box_memoria + 6 * mm
+
+    _draw_info_box(
+        pdf,
+        margem_x,
+        y,
+        largura_util,
+        altura_box_bandeiras,
+        "Entenda as bandeiras tarifarias",
+        explicacao_bandeiras,
+        azul_principal,
+        azul_secundario,
+        cinza_texto,
+        font_size=8.3,
+    )
 
     pdf.setStrokeColor(cinza_borda)
     pdf.line(margem_x, 18 * mm, largura - margem_x, 18 * mm)
