@@ -6,9 +6,15 @@ from tests import _path_setup  # noqa: F401
 
 from energia.exceptions import ValidationError
 from energia.gerenciador_de_dados import GerenciadorDados
+from energia.paths import BASE_DIR, DATA_FILE, DADOS_DIR
 
 
 class GerenciadorDadosTestCase(unittest.TestCase):
+    def test_caminho_padrao_aponta_para_dados_data_json_na_raiz(self) -> None:
+        self.assertEqual(BASE_DIR, Path(__file__).resolve().parent.parent)
+        self.assertEqual(DADOS_DIR, BASE_DIR / "dados")
+        self.assertEqual(DATA_FILE, BASE_DIR / "dados" / "data.json")
+
     def setUp(self) -> None:
         self.temp_dir = tempfile.TemporaryDirectory()
         self.data_file = Path(self.temp_dir.name) / "data.json"
