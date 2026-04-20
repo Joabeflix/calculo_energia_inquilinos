@@ -1,13 +1,16 @@
-import ttkbootstrap as tb
-from ttkbootstrap.constants import *
 from tkinter import messagebox
 
-from v2.gerenciador_de_dados import GerenciadorDados
-from v2.calculadora import CalcularEnergia
-from v2.gerador_pdf import gerar_faturas_pdf
+import ttkbootstrap as tb
+from ttkbootstrap.constants import BOTH, DANGER, LEFT, PRIMARY, RIGHT, SUCCESS, WARNING, W, X, Y
+
+from energia.calculadora import CalcularEnergia
+from energia.exceptions import EnergiaError, ValidationError
+from energia.gerador_pdf import gerar_faturas_pdf
+from energia.gerenciador_de_dados import GerenciadorDados
+
 
 class App:
-    def __init__(self):
+    def __init__(self) -> None:
         self.gd = GerenciadorDados()
 
         self.root = tb.Window(themename="darkly")
@@ -23,16 +26,18 @@ class App:
         tb.Button(self.frame, text="Inquilinos", bootstyle=PRIMARY, command=self.tela_inquilinos).pack(fill=X, pady=10)
         tb.Button(self.frame, text="Taxas e Consumo", bootstyle=WARNING, command=self.tela_taxas).pack(fill=X, pady=10)
 
-    def gerar_pdf(self):
+    def gerar_pdf(self) -> None:
         try:
-            calc = CalcularEnergia()
+            calc = CalcularEnergia(self.gd)
             calc.calcular_energia()
-            gerar_faturas_pdf()
+            gerar_faturas_pdf(self.gd)
             messagebox.showinfo("Sucesso", "PDF gerado com sucesso!")
-        except Exception as e:
-            messagebox.showerror("Erro", str(e))
+        except EnergiaError as exc:
+            messagebox.showerror("Erro", str(exc))
+        except Exception as exc:
+            messagebox.showerror("Erro inesperado", str(exc))
 
-    def tela_inquilinos(self):
+    def tela_inquilinos(self) -> None:
         win = tb.Toplevel(self.root)
         win.title("Inquilinos")
         win.geometry("600x500")
@@ -44,10 +49,7 @@ class App:
         scrollbar = tb.Scrollbar(container, orient="vertical", command=canvas.yview)
         scroll_frame = tb.Frame(canvas)
 
-        scroll_frame.bind(
-            "<Configure>",
-            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
-        )
+        scroll_frame.bind("<Configure>", lambda _: canvas.configure(scrollregion=canvas.bbox("all")))
 
         canvas.create_window((0, 0), window=scroll_frame, anchor="nw")
         canvas.configure(yscrollcommand=scrollbar.set)
@@ -55,7 +57,8 @@ class App:
         canvas.pack(side=LEFT, fill=BOTH, expand=True)
         scrollbar.pack(side=RIGHT, fill=Y)
 
-        def atualizar_cards():
+        def atualizar_cards() -> None:
+            self.gd.recarregar()
             for widget in scroll_frame.winfo_children():
                 widget.destroy()
 
@@ -76,19 +79,21 @@ class App:
                 atual.insert(0, str(dados["consumo_atual"]))
                 atual.pack(side=LEFT, padx=5)
 
-                def salvar(nome=nome, anterior=anterior, atual=atual):
+                def salvar(nome_inquilino: str = nome, anterior_entry: tb.Entry = anterior, atual_entry: tb.Entry = atual) -> None:
                     try:
-                        self.gd.cadastrar_atualizar_inquilino({
-                            "nome": nome,
-                            "consumo_anterior": float(anterior.get()),
-                            "consumo_atual": float(atual.get())
-                        })
+                        self.gd.cadastrar_atualizar_inquilino(
+                            {
+                                "nome": nome_inquilino,
+                                "consumo_anterior": anterior_entry.get(),
+                                "consumo_atual": atual_entry.get(),
+                            }
+                        )
                         atualizar_cards()
-                    except Exception as e:
-                        messagebox.showerror("Erro", str(e))
+                    except EnergiaError as exc:
+                        messagebox.showerror("Erro", str(exc))
 
-                def remover(nome=nome):
-                    self.gd.remover_inquilino(nome)
+                def remover(nome_inquilino: str = nome) -> None:
+                    self.gd.remover_inquilino(nome_inquilino)
                     atualizar_cards()
 
                 btn_frame = tb.Frame(card)
@@ -99,50 +104,38 @@ class App:
 
         atualizar_cards()
 
-        # adicionar novo inquilino
         add_frame = tb.Frame(win)
         add_frame.pack(fill=X, pady=10)
 
         nome = tb.Entry(add_frame)
         nome.pack(side=LEFT, expand=True, fill=X, padx=5)
-        nome.insert(0, "Nome")
 
         anterior = tb.Entry(add_frame)
         anterior.pack(side=LEFT, expand=True, fill=X, padx=5)
-        anterior.insert(0, "Anterior")
 
         atual = tb.Entry(add_frame)
         atual.pack(side=LEFT, expand=True, fill=X, padx=5)
-        atual.insert(0, "Atual")
 
-        def adicionar():
+        def adicionar() -> None:
             try:
-                nome_val = nome.get().strip()
-                anterior_val = float(anterior.get())
-                atual_val = float(atual.get())
-
-                if not nome_val:
-                    raise ValueError("Nome não pode ser vazio")
-
-                self.gd.cadastrar_atualizar_inquilino({
-                    "nome": nome_val,
-                    "consumo_anterior": anterior_val,
-                    "consumo_atual": atual_val
-                })
+                self.gd.cadastrar_atualizar_inquilino(
+                    {
+                        "nome": nome.get(),
+                        "consumo_anterior": anterior.get(),
+                        "consumo_atual": atual.get(),
+                    }
+                )
                 atualizar_cards()
-
-                nome.delete(0, 'end')
-                anterior.delete(0, 'end')
-                atual.delete(0, 'end')
-
-            except ValueError:
-                messagebox.showerror("Erro", "Consumo deve ser número (int ou float)")
-            except Exception as e:
-                messagebox.showerror("Erro", str(e))
+                for entry in (nome, anterior, atual):
+                    entry.delete(0, "end")
+            except ValidationError as exc:
+                messagebox.showerror("Erro", str(exc))
+            except Exception as exc:
+                messagebox.showerror("Erro inesperado", str(exc))
 
         tb.Button(win, text="Adicionar Inquilino", command=adicionar, bootstyle=PRIMARY).pack(pady=5)
 
-    def tela_taxas(self):
+    def tela_taxas(self) -> None:
         win = tb.Toplevel(self.root)
         win.title("Taxas e Consumo")
         win.geometry("400x500")
@@ -158,28 +151,23 @@ class App:
             "iluminacao_publica": tb.Entry(win),
         }
 
-        for k, entry in campos.items():
-            tb.Label(win, text=k).pack()
+        for campo, entry in campos.items():
+            tb.Label(win, text=campo).pack()
             entry.pack(fill=X, padx=10, pady=5)
-            entry.insert(0, str(getattr(self.gd, k) if hasattr(self.gd, k) else getattr(self.gd, f"_{k}", 0)))
+            entry.insert(0, str(getattr(self.gd, campo)))
 
-        def salvar():
+        def salvar() -> None:
             try:
-                self.gd.preco_base = campos["preco_base"].get()
-                self.gd._adicional_amarelo = campos["adicional_amarelo"].get()
-                self.gd._adicional_vermelho = campos["adicional_vermelho"].get()
-                self.gd.total_consumo = campos["total_consumo"].get()
-                self.gd.consumo_verde = campos["consumo_verde"].get()
-                self.gd.consumo_amarelo = campos["consumo_amarelo"].get()
-                self.gd.consumo_vermelho = campos["consumo_vermelho"].get()
-                self.gd.iluminacao_publica = campos["iluminacao_publica"].get()
+                self.gd.atualizar_configuracoes({campo: entry.get() for campo, entry in campos.items()})
                 messagebox.showinfo("Sucesso", "Dados atualizados!")
-            except Exception as e:
-                messagebox.showerror("Erro", str(e))
+            except EnergiaError as exc:
+                messagebox.showerror("Erro", str(exc))
+            except Exception as exc:
+                messagebox.showerror("Erro inesperado", str(exc))
 
         tb.Button(win, text="Salvar", command=salvar, bootstyle=SUCCESS).pack(pady=20)
 
-    def run(self):
+    def run(self) -> None:
         self.root.mainloop()
 
 
