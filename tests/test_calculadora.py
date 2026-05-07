@@ -24,6 +24,8 @@ class CalculadoraTestCase(unittest.TestCase):
                 "consumo_amarelo": 25,
                 "consumo_vermelho": 25,
                 "iluminacao_publica": 40,
+                "desconto": 10,
+                "motivo_desconto": "Credito na fatura",
             }
         )
         self.gd.cadastrar_atualizar_inquilino(
@@ -43,7 +45,9 @@ class CalculadoraTestCase(unittest.TestCase):
         self.assertEqual(set(resultados.keys()), {"joao", "maria"})
         self.assertEqual(resultados["joao"]["kwh_consumido_mes"], "40.00")
         self.assertEqual(resultados["joao"]["iluminacao_publica"], "20.00")
-        self.assertEqual(resultados["joao"]["total"], "68.00")
+        self.assertEqual(resultados["joao"]["desconto"], "5.00")
+        self.assertEqual(resultados["joao"]["motivo_desconto"], "Credito na fatura")
+        self.assertEqual(resultados["joao"]["total"], "63.00")
         self.assertIn("calculo_inquilino", self.gd.dados_inquilinos["joao"])
 
     def test_bloqueia_calculo_quando_bandeiras_nao_fecham_total(self) -> None:

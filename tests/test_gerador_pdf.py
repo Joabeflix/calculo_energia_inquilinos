@@ -32,6 +32,8 @@ class GeradorPdfTestCase(unittest.TestCase):
                 "consumo_amarelo": 15,
                 "consumo_vermelho": 10,
                 "iluminacao_publica": 30,
+                "desconto": 9,
+                "motivo_desconto": "Credito aplicado",
             }
         )
         self.gd.cadastrar_atualizar_inquilino(

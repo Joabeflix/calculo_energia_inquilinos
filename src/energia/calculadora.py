@@ -16,6 +16,8 @@ class CalcularEnergia:
         self.consumo_amarelo = self.dados.consumo_amarelo
         self.consumo_vermelho = self.dados.consumo_vermelho
         self.iluminacao_total = self.dados.iluminacao_publica
+        self.desconto_total = self.dados.desconto
+        self.motivo_desconto = self.dados.motivo_desconto
         self.qtd_inquilinos = self.dados.quantidade_inquilinos
         self.dados_inquilinos = self.dados.dados_inquilinos
         self.taxa_verde = self.dados.preco_base
@@ -58,6 +60,8 @@ class CalcularEnergia:
         valor_amarelo: float,
         valor_vermelho: float,
         iluminacao_publica: float,
+        desconto: float,
+        motivo_desconto: str,
         total: float,
     ) -> dict[str, Any]:
         return {
@@ -74,6 +78,8 @@ class CalcularEnergia:
             "valor_amarelo": f"{valor_amarelo:.2f}",
             "valor_vermelho": f"{valor_vermelho:.2f}",
             "iluminacao_publica": f"{iluminacao_publica:.2f}",
+            "desconto": f"{desconto:.2f}",
+            "motivo_desconto": motivo_desconto,
             "total": f"{total:.2f}",
         }
 
@@ -82,6 +88,7 @@ class CalcularEnergia:
         self._validar_estado_calculo()
 
         iluminacao_por_inquilino = self.iluminacao_total / self.qtd_inquilinos
+        desconto_por_inquilino = self.desconto_total / self.qtd_inquilinos
         resultados: dict[str, dict[str, Any]] = {}
 
         for nome, dados in self.dados_inquilinos.items():
@@ -93,7 +100,13 @@ class CalcularEnergia:
             valor_verde = consumo_verde * self.taxa_verde
             valor_amarelo = consumo_amarelo * self.taxa_amarelo
             valor_vermelho = consumo_vermelho * self.taxa_vermelho
-            total = iluminacao_por_inquilino + valor_verde + valor_amarelo + valor_vermelho
+            total = (
+                iluminacao_por_inquilino
+                + valor_verde
+                + valor_amarelo
+                + valor_vermelho
+                - desconto_por_inquilino
+            )
 
             resultado = self._montar_resultado(
                 consumo_anterior=dados["consumo_anterior"],
@@ -109,6 +122,8 @@ class CalcularEnergia:
                 valor_amarelo=valor_amarelo,
                 valor_vermelho=valor_vermelho,
                 iluminacao_publica=iluminacao_por_inquilino,
+                desconto=desconto_por_inquilino,
+                motivo_desconto=self.motivo_desconto,
                 total=total,
             )
             self.dados.salvar_calculo_inquilino(nome, resultado)

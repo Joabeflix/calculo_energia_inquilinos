@@ -22,6 +22,8 @@ DEFAULT_DATA = {
     "consumo_amarelo": 0.0,
     "consumo_vermelho": 0.0,
     "iluminacao_publica": 0.0,
+    "desconto": 0.0,
+    "motivo_desconto": "",
     "inquilinos": {},
 }
 
@@ -159,6 +161,24 @@ class GerenciadorDados:
         self._atualizar("iluminacao_publica", valor)
 
     @property
+    def desconto(self) -> float:
+        return self._dados.get("desconto", 0.0)
+
+    @desconto.setter
+    def desconto(self, valor: Any) -> None:
+        self._atualizar("desconto", valor)
+
+    @property
+    def motivo_desconto(self) -> str:
+        return str(self._dados.get("motivo_desconto", "") or "")
+
+    @motivo_desconto.setter
+    def motivo_desconto(self, valor: Any) -> None:
+        self._dados["motivo_desconto"] = str(valor).strip()
+        self._salvar_arquivo(self._dados)
+        self.recarregar()
+
+    @property
     def dados_inquilinos(self) -> dict[str, dict[str, Any]]:
         return self._dados.get("inquilinos", {})
 
@@ -180,11 +200,15 @@ class GerenciadorDados:
             "consumo_amarelo",
             "consumo_vermelho",
             "iluminacao_publica",
+            "desconto",
         ):
             if campo in configuracoes:
                 self._dados[campo] = validate_non_negative(
                     to_float(configuracoes[campo], campo), campo
                 )
+
+        if "motivo_desconto" in configuracoes:
+            self._dados["motivo_desconto"] = str(configuracoes["motivo_desconto"]).strip()
 
         self._salvar_arquivo(self._dados)
         self.recarregar()

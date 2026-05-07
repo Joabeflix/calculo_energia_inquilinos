@@ -139,6 +139,8 @@ def _gerar_pdf_cliente(cliente: str, valores: dict, pasta_saida: Path) -> Path:
         + Decimal(valores["valor_amarelo"])
         + Decimal(valores["valor_vermelho"])
     )
+    desconto = Decimal(str(valores.get("desconto", "0.00")))
+    motivo_desconto = str(valores.get("motivo_desconto", "") or "Nao informado")
 
     pdf.setFillColor(azul_principal)
     pdf.rect(0, altura - 34 * mm, largura, 34 * mm, fill=1, stroke=0)
@@ -147,7 +149,7 @@ def _gerar_pdf_cliente(cliente: str, valores: dict, pasta_saida: Path) -> Path:
     pdf.setFont("Helvetica-Bold", 17)
     pdf.drawString(margem_x, altura - 17 * mm, "FATURA DE ENERGIA")
     pdf.setFont("Helvetica", 9)
-    pdf.drawString(margem_x, altura - 24 * mm, "Resumo individual do rateio de consumo")
+    pdf.drawString(margem_x, altura - 24 * mm, "Resumo individual da divisao da conta de energia")
     pdf.drawRightString(largura - margem_x, altura - 17 * mm, f"Cliente: {cliente.upper()}")
 
     y = altura - 44 * mm
@@ -263,15 +265,19 @@ def _gerar_pdf_cliente(cliente: str, valores: dict, pasta_saida: Path) -> Path:
     y -= 4 * mm
 
     pdf.setFillColor(cinza_fundo)
-    pdf.roundRect(margem_x, y - 17 * mm, largura_util, 17 * mm, 4 * mm, fill=1, stroke=0)
+    pdf.roundRect(margem_x, y - 29 * mm, largura_util, 29 * mm, 4 * mm, fill=1, stroke=0)
     pdf.setFillColor(cinza_texto_escuro)
     pdf.setFont("Helvetica", 9.5)
     pdf.drawString(margem_x + 6 * mm, y - 6 * mm, "Total gasto")
     pdf.drawRightString(margem_x + largura_util - 6 * mm, y - 6 * mm, _money(total_bandeiras))
     pdf.drawString(margem_x + 6 * mm, y - 12 * mm, "Iluminacao publica")
     pdf.drawRightString(margem_x + largura_util - 6 * mm, y - 12 * mm, _money(valores["iluminacao_publica"]))
+    pdf.drawString(margem_x + 6 * mm, y - 18 * mm, "Desconto")
+    pdf.drawRightString(margem_x + largura_util - 6 * mm, y - 18 * mm, f"- {_money(desconto)}")
+    pdf.drawString(margem_x + 6 * mm, y - 24 * mm, "Motivo do desconto")
+    pdf.drawRightString(margem_x + largura_util - 6 * mm, y - 24 * mm, motivo_desconto[:80])
 
-    y -= 22 * mm
+    y -= 34 * mm
     pdf.setFillColor(azul_principal)
     pdf.roundRect(margem_x, y - 12 * mm, largura_util, 12 * mm, 4 * mm, fill=1, stroke=0)
     pdf.setFillColor(white)
@@ -291,11 +297,12 @@ def _gerar_pdf_cliente(cliente: str, valores: dict, pasta_saida: Path) -> Path:
         f"1. Consumo individual: {_number(valores['registro_kwh_atual'])} - {_number(valores['registro_kwh_anterior'])} = {_number(valores['kwh_consumido_mes'])} kWh.",
         "2. O consumo do morador e distribuido proporcionalmente entre as bandeiras verde, amarela e vermelha.",
         f"3. Total gasto: {_money(valores['valor_verde'])} + {_money(valores['valor_amarelo'])} + {_money(valores['valor_vermelho'])} = {_money(total_bandeiras)}.",
-        f"4. Rateio final: {_money(total_bandeiras)} + {_money(valores['iluminacao_publica'])} = {_money(valores['total'])}.",
+        f"4. Rateio final: {_money(total_bandeiras)} + {_money(valores['iluminacao_publica'])} - {_money(desconto)} = {_money(valores['total'])}.",
+        f"5. Motivo do desconto: {motivo_desconto[:94]}.",
     ]
 
     y -= 18 * mm
-    altura_box_memoria = 28 * mm
+    altura_box_memoria = 33 * mm
     altura_box_bandeiras = 33 * mm
 
     _draw_info_box(
@@ -332,7 +339,7 @@ def _gerar_pdf_cliente(cliente: str, valores: dict, pasta_saida: Path) -> Path:
     pdf.line(margem_x, 18 * mm, largura - margem_x, 18 * mm)
     pdf.setFillColor(cinza_texto)
     pdf.setFont("Helvetica", 8)
-    pdf.drawString(margem_x, 14 * mm, "Documento gerado automaticamente pelo sistema de rateio de energia.")
+    pdf.drawString(margem_x, 14 * mm, "Documento gerado automaticamente pelo sistema de divisao da conta de energia.")
     pdf.drawRightString(largura - margem_x, 14 * mm, f"Arquivo: {arquivo_pdf.name}")
 
     pdf.showPage()

@@ -27,6 +27,8 @@ class GerenciadorDadosTestCase(unittest.TestCase):
         self.assertTrue(self.data_file.exists())
         self.assertEqual(self.gd.quantidade_inquilinos, 0)
         self.assertEqual(self.gd.iluminacao_publica, 0.0)
+        self.assertEqual(self.gd.desconto, 0.0)
+        self.assertEqual(self.gd.motivo_desconto, "")
 
     def test_cadastra_inquilino_com_validacao(self) -> None:
         self.gd.cadastrar_atualizar_inquilino(
@@ -54,9 +56,13 @@ class GerenciadorDadosTestCase(unittest.TestCase):
                 "consumo_amarelo": 30,
                 "consumo_vermelho": 20,
                 "iluminacao_publica": 42,
+                "desconto": 15,
+                "motivo_desconto": "Ajuste da concessionaria",
             }
         )
 
         self.assertEqual(self.gd.preco_base, 1.2)
         self.assertEqual(self.gd.valor_total_amarelo, 1.3)
         self.assertEqual(self.gd.valor_total_vermelho, 1.4)
+        self.assertEqual(self.gd.desconto, 15.0)
+        self.assertEqual(self.gd.motivo_desconto, "Ajuste da concessionaria")

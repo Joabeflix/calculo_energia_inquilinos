@@ -52,7 +52,7 @@ class App:
         acoes = [
             (
                 "Gerar faturas em PDF",
-                "Executa o calculo, salva o rateio no data.json e monta os PDFs.",
+                "Executa o calculo, salva a divisao da conta no data.json e monta os PDFs.",
                 SUCCESS,
                 self.gerar_pdf,
             ),
@@ -64,7 +64,7 @@ class App:
             ),
             (
                 "Atualizar taxas e consumo",
-                "Edite valores da conta principal usados no rateio do mes.",
+                "Edite valores da conta principal usados na divisao da conta do mes.",
                 WARNING,
                 self.tela_taxas,
             ),
@@ -101,6 +101,7 @@ class App:
             ("quantidade_inquilinos", "Inquilinos cadastrados", "primary"),
             ("preco_base", "Preco base kWh", "success"),
             ("iluminacao_publica", "Iluminacao publica", "warning"),
+            ("desconto", "Desconto da fatura", "danger"),
             ("total_consumo", "Consumo total", "info"),
         ]
 
@@ -142,6 +143,7 @@ class App:
             "quantidade_inquilinos": str(self.gd.quantidade_inquilinos),
             "preco_base": f"R$ {self.gd.preco_base:.4f}",
             "iluminacao_publica": f"R$ {self.gd.iluminacao_publica:.2f}",
+            "desconto": f"R$ {self.gd.desconto:.2f}",
             "total_consumo": f"{self.gd.total_consumo:.2f} kWh",
         }
 
@@ -237,7 +239,7 @@ class App:
                 )
                 tb.Label(
                     card,
-                    text="Atualize as leituras e salve para manter o rateio sincronizado.",
+                    text="Atualize as leituras e salve para manter a divisao da conta sincronizada.",
                     font=("Segoe UI", 9),
                     bootstyle="secondary",
                 ).grid(row=1, column=0, columnspan=2, sticky=W, pady=(2, 10))
@@ -358,7 +360,7 @@ class App:
         )
         tb.Label(
             root_frame,
-            text="Atualize os valores da conta principal usados pelo calculo do rateio.",
+            text="Atualize os valores da conta principal usados pelo calculo da divisao da conta.",
             font=("Segoe UI", 10),
             bootstyle="secondary",
         ).grid(row=1, column=0, columnspan=2, sticky=W, pady=(4, 18))
@@ -375,6 +377,8 @@ class App:
                 ("consumo_amarelo", "Consumo em bandeira amarela"),
                 ("consumo_vermelho", "Consumo em bandeira vermelha"),
                 ("iluminacao_publica", "Iluminacao publica"),
+                ("desconto", "Desconto total da fatura"),
+                ("motivo_desconto", "Motivo do desconto"),
             ),
         }
 
